@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS db_auth_service;
+CREATE DATABASE IF NOT EXISTS db_cc;
+CREATE DATABASE IF NOT EXISTS db_device_service;
+CREATE DATABASE IF NOT EXISTS db_notification_service;

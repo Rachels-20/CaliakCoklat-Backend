@@ -1,0 +1,90 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: http://localhost:8091
+              predicates:
+                - Path=/auth/**
+
+            - id: device-service
+              uri: http://localhost:8092
+              predicates:
+                - Path=/devices/**
+
+            - id: kelembapan-tanah-service
+              uri: http://localhost:8094
+              predicates:
+                - Path=/kelembapan-tanah/**
+
+            - id: kelembapan-udara-service
+              uri: http://localhost:8095
+              predicates:
+                - Path=/kelembapan-udara/**
+
+            - id: ph-tanah-service
+              uri: http://localhost:8096
+              predicates:
+                - Path=/ph-tanah/**
+
+            - id: suhu-tanah-service
+              uri: http://localhost:8097
+              predicates:
+                - Path=/suhu-tanah/**
+
+            - id: suhu-udara-service
+              uri: http://localhost:8098
+              predicates:
+                - Path=/suhu-udara/**
+
+            - id: dashboard-service
+              uri: http://localhost:8099
+              predicates:
+                - Path=/dashboard/**
+
+            - id: weekly-report-service
+              uri: http://localhost:8100
+              predicates:
+                - Path=/reports/**
+
+            - id: notification-service
+              uri: http://localhost:8101
+              predicates:
+              - Path=/notifications/**
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: host.docker.internal
+    prefer-ip-address: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+
+  endpoint:
+    health:
+      show-details: always
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <springProperty
+        scope="context"
+        name="applicationName"
+        source="spring.application.name" />
+
+    <!-- Console -->
+    <appender name="CONSOLE"
+        class="ch.qos.logback.core.ConsoleAppender">
+
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+
+            <providers>
+
+                <timestamp />
+
+                <pattern>
+                    <pattern>
+                        {
+                        "application":"${applicationName}",
+                        "level":"%level",
+                        "thread":"%thread",
+                        "logger":"%logger",
+                        "message":"%message"
+                        }
+                    </pattern>
+                </pattern>
+
+            </providers>
+
+        </encoder>
+
+    </appender>
+
+    <!-- Logstash -->
+    <appender name="LOGSTASH"
+        class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+
+        <destination>
+            logstash:5000
+        </destination>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+
+    </appender>
+
+    <root level="INFO">
+
+        <appender-ref ref="CONSOLE" />
+
+        <appender-ref ref="LOGSTASH" />
+
+    </root>
+
+</configuration>

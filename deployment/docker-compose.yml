@@ -1,0 +1,282 @@
+services:
+
+  mysql:
+    image: mysql:8.0.30
+    container_name: mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+
+    networks:
+      - caliak-network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: unless-stopped
+
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    networks:
+      - caliak-network
+
+  eureka:
+    image: eureka
+    container_name: eureka
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8761:8761"
+
+    networks:
+      - caliak-network
+
+  authentication-service:
+    image: authentication-service
+    container_name: authentication-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8091:8091"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+
+    networks:
+      - caliak-network
+
+  api-gateway:
+    image: api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - eureka
+
+    networks:
+      - caliak-network
+
+  device-service:
+    image: device-service
+    container_name: device-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8092:8092"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - authentication-service
+
+    networks:
+      - caliak-network
+
+  dashboard-service:
+    image: dashboard-service
+    container_name: dashboard-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8099:8099"
+
+    depends_on:
+      - eureka
+      - device-service
+      - suhu-tanah-service
+      - suhu-udara-service
+      - kelembapan-tanah-service
+      - kelembapan-udara-service
+      - ph-tanah-service
+
+    networks:
+      - caliak-network
+
+  notification-service:
+    image: notification-service
+    container_name: notification-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8101:8101"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  kelembapan-tanah-service:
+    image: kelembapan-tanah-service
+    container_name: kelembapan-tanah-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8094:8094"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  kelembapan-udara-service:
+    image: kelembapan-udara-service
+    container_name: kelembapan-udara-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8095:8095"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  ph-tanah-service:
+    image: ph-tanah-service
+    container_name: ph-tanah-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8096:8096"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  suhu-tanah-service:
+    image: suhu-tanah-service
+    container_name: suhu-tanah-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8097:8097"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  suhu-udara-service:
+    image: suhu-udara-service
+    container_name: suhu-udara-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8098:8098"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+
+    networks:
+      - caliak-network
+
+  weekly-report-service:
+    image: weekly-report-service
+    container_name: weekly-report-service
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+    ports:
+      - "8100:8100"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+      - eureka
+      - device-service
+      - suhu-tanah-service
+      - suhu-udara-service
+      - kelembapan-tanah-service
+      - kelembapan-udara-service
+      - ph-tanah-service
+
+    networks:
+      - caliak-network
+
+networks:
+  caliak-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+

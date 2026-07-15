@@ -79,4 +79,4 @@ CaliakCoklat-Backend
 
 ## Status Project
 
-Project ini dikembangkan sebagai bagian dari **Project Based Learning (PBL)** di **Politeknik Negeri Padang** dan masih terus dikembangkan untuk penambahan fitur serta penyempurnaan sistem.
+Project ini dikembangkan sebagai bagian dari **Project Based Learning (PBL)** di **Politeknik Negeri Padang**.

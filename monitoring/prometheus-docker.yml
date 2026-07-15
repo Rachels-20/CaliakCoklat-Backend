@@ -1,14 +1,13 @@
 global:
   scrape_interval: 5s
 
-
 scrape_configs:
   - job_name: "spring-services"
 
     metrics_path: "/actuator/prometheus"
 
     eureka_sd_configs:
-      - server: http://host.docker.internal:8761/eureka
+      - server: http://eureka:8761/eureka
 
     relabel_configs:
       - source_labels: [__meta_eureka_app_name]

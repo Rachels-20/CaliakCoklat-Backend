@@ -1,7 +1,0 @@
-ide tambahan:
-05-06-2026
--perbaiki logika rekomendasi (kondisi gabungan misal, suhu tanah dan suhu udara)
--tambahkan severity score, berdasarkan itu barulah tampil kondisi kebun di optimal, perlu perhatian, atau kritis,
--tambahkan resiko atas kondisi kebun saat ini, seperti kekeringan atau pertumbuhan terlambat
--simpan kondisi kebun ke histori
--integrasikan rekomendasi ke notifikasi

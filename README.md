@@ -76,6 +76,13 @@ CaliakCoklat-Backend
 ├── kelembapan-udara-service
 └── weekly-report-service
 ```
+## Cara Menjalankan
+
+1. Clone repository.
+2. Jalankan MySQL dan RabbitMQ.
+3. Jalankan Eureka Server.
+4. Jalankan API Gateway.
+5. Jalankan seluruh microservices.
 
 ## Status Project
 
